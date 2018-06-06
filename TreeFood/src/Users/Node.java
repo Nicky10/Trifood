@@ -13,7 +13,8 @@ public class Node
     
     Node next;
 
-    public Node(String Nombre, String Apellido, String Usuario, String Contraseña) {
+    public Node(int Id, String Nombre, String Apellido, String Usuario, String Contraseña) {
+        this.Id = Id;
         this.Nombre = Nombre;
         this.Apellido = Apellido;
         this.Usuario = Usuario;
@@ -24,7 +25,7 @@ public class Node
     
     public Node clone()
     {
-         return  new Node(this.Nombre,this.Apellido,this.Usuario,this.Contraseña);
+         return  new Node(this.Id, this.Nombre,this.Apellido,this.Usuario,this.Contraseña);
         
     }
 

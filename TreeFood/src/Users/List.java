@@ -113,7 +113,7 @@ public class List
         for (int i = 0; i < position - 1; i++) {
             temp = temp.next;
         }
-        return temp.next;
+        return temp;
     }
     
     public Node searchByUser(String name)
@@ -122,7 +122,60 @@ public class List
         while(temp.Usuario != name) {
             temp = temp.next;
         }
-        return temp.next;
+        return temp;
+    }
+    
+    public Node searchByUserName(String name)
+    {
+        Node temp = head;
+        while(temp.Nombre != name) {
+            temp = temp.next;
+        }
+        return temp;
+    }
+    
+    public int searchById(int Id)
+    {
+        int respuesta = -1;
+        for (int i = 0; i < this.Length() - 1; i++) {
+            if (this.searchByPosition(i).getId() == Id){
+                respuesta=i;
+            }
+        }
+        return respuesta;
+    }
+    
+    public Node searchById_(int Id)
+    {
+        Node temp = null;
+        for (int i = 0; i < this.Length() - 1; i++) {
+            if (this.searchByPosition(i).getId() == Id){
+                temp = this.searchByPosition(i);
+            }
+        }
+        return temp;
+    }
+    
+    public void updateUser(int Id, Node newNode)
+    {
+        Node temp = this.searchById_(Id);
+        temp.Apellido = newNode.Apellido;
+        temp.Id = newNode.Id;
+        temp.Nombre = newNode.Nombre;
+        temp.Usuario = newNode.Usuario;
+        temp.Contraseña = newNode.Contraseña;
+    }
+    
+    public int Length()
+    {
+        Node temp = this.head;
+        int counter = 1;
+        while(temp.next != null)
+        {
+            temp = temp.next;
+            counter++;
+        }
+        return counter;
     }
     
 

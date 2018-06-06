@@ -112,7 +112,7 @@ public class List
         for (int i = 0; i < position - 1; i++) {
             temp = temp.next;
         }
-        return temp.next;
+        return temp;
     }
     
     public Node searchByRestaurant(String name)
@@ -121,7 +121,51 @@ public class List
         while(temp.Nombre != name) {
             temp = temp.next;
         }
-        return temp.next;
+        return temp;
+    }
+    
+    public int searchById(int Id)
+    {
+        int respuesta = -1;
+        for (int i = 0; i < this.Length() - 1; i++) {
+            if (this.searchByPosition(i).getId() == Id){
+                respuesta=i;
+            }
+        }
+        return respuesta;
+    }
+    
+    public Node searchById_(int Id)
+    {
+        Node temp = null;
+        for (int i = 0; i < this.Length() - 1; i++) {
+            if (this.searchByPosition(i).getId() == Id){
+                temp = this.searchByPosition(i);
+            }
+        }
+        return temp;
+    }
+    
+    public void updateRestaurant(int Id, Node newNode)
+    {
+        Node temp = this.searchById_(Id);
+        temp.Detalles = newNode.Detalles;
+        temp.Id = newNode.Id;
+        temp.Nombre = newNode.Nombre;
+        temp.Calificacion = newNode.Calificacion;
+        temp.foto = newNode.foto;
+    }
+    
+    public int Length()
+    {
+        Node temp = this.head;
+        int counter = 1;
+        while(temp.next != null)
+        {
+            temp = temp.next;
+            counter++;
+        }
+        return counter;
     }
 
 }

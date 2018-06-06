@@ -10,13 +10,12 @@ import Restaurants.*;
 public class Node
 {
     public int Id;
-    public String Nombre, Apellido, Usuario, Contraseña;
+    public String Usuario, Contraseña;
     
     Node next;
 
-    public Node(String Nombre, String Apellido, String Usuario, String Contraseña) {
-        this.Nombre = Nombre;
-        this.Apellido = Apellido;
+    public Node(int Id, String Usuario, String Contraseña) {
+        this.Id = Id;
         this.Usuario = Usuario;
         this.Contraseña = Contraseña;
     }
@@ -25,7 +24,7 @@ public class Node
     
     public Node clone()
     {
-         return  new Node(this.Nombre,this.Apellido,this.Usuario,this.Contraseña);
+         return  new Node(this.Id,this.Usuario,this.Contraseña);
         
     }
 
@@ -35,22 +34,6 @@ public class Node
 
     public void setId(int Id) {
         this.Id = Id;
-    }
-
-    public String getNombre() {
-        return Nombre;
-    }
-
-    public void setNombre(String Nombre) {
-        this.Nombre = Nombre;
-    }
-
-    public String getApellido() {
-        return Apellido;
-    }
-
-    public void setApellido(String Apellido) {
-        this.Apellido = Apellido;
     }
 
     public String getUsuario() {
