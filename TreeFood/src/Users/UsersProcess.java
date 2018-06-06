@@ -14,41 +14,44 @@ import java.util.ArrayList;
  *
  * @author David
  */
-public class Proceso {
-    
+public class UsersProcess {
+
     private List a = new List();
-    
-    public Proceso(){}
-    
-    public Proceso(List a){
+
+    public UsersProcess() {
+    }
+
+    public UsersProcess(List a) {
         this.a = a;
     }
-    
-    public void agregarRegistro(Node p){
+
+    public void agregarRegistro(UsersNode p) {
         this.a.insertAtBegin(p);
     }
 
-    public void modificarRegistro(int i, Node p){
-        this.a.updateUser(i, p);
+    public void modificarRegistro(int i, UsersNode p) {
+        this.a.updateUsers(i, p);
     }
-    
-    public void eliminarRegistro(int i){
+
+    public void eliminarRegistro(int i) {
         this.a.deleteAtPosition(i);
     }
-    
-    public Node obtenerRegistro(int i){
+
+    public UsersNode obtenerRegistro(int i) {
         return a.searchByPosition(i);
     }
-    
-    public int cantidadRegistro(){
+
+    public int cantidadRegistro() {
         return this.a.Length();
     }
-    
-    public int buscaId(int codigo){
-        for(int i = 0; i < cantidadRegistro(); i++){
-            if(codigo == obtenerRegistro(i).getId())return i;
+
+    public int buscaId(int codigo) {
+        for (int i = 0; i < cantidadRegistro(); i++) {
+            if (codigo == obtenerRegistro(i).getId()) {
+                return i;
+            }
         }
         return -1;
     }
-    
+
 }

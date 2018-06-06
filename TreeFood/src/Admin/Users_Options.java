@@ -1,261 +1,242 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Admin;
 
-import Ventanas.*;
 import Otros.Limpiar_txt;
 import Otros.imgTabla;
-import Users.Node;
-import Users.Proceso;
-import java.awt.image.BufferedImage;
+import Users.UsersNode;
+import Users.UsersProcess;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.util.StringTokenizer;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
-/**
- *
- * @author ADMIN
- */
+
 public class Users_Options extends javax.swing.JFrame {
 
-    
     Limpiar_txt lt = new Limpiar_txt();
-    
-    private String ruta_txt = "mi.txt"; 
-    
-    Node p;
-    Proceso rp;
-    
+
+    private String ruta_txt = "Users.txt";
+
+    UsersNode p;
+    UsersProcess rp = new UsersProcess();
+
     int clic_tabla;
-    
-    /**
-     * Creates new form Food_Options
-     */
+
     public Users_Options() {
+        cargar_txt();
         initComponents();
+        listarRegistro();
         this.setLocationRelativeTo(null);
     }
 
-    public void cargar_txt(){
+    public void cargar_txt() {
         File ruta = new File(ruta_txt);
-        try{
-            FileInputStream fis = new FileInputStream(ruta_txt);
-            ObjectInputStream in = new ObjectInputStream(fis);
-            if (in != null) {
-                rp = (Proceso)in.readObject();
-                in.close();
-                
+        try {
+            FileReader fr = new FileReader(ruta);
+            BufferedReader br = new BufferedReader(fr);
+
+            String input = br.readLine();
+
+            while (input != null) {
+                String[] p2 = input.split(",");
+                rp.agregarRegistro(new UsersNode(Integer.parseInt(p2[0]), p2[1], p2[2], p2[3], p2[4]));
+                input = br.readLine();
             }
-        }catch(Exception ex){
-            mensaje("Error al cargar archivo: "+ex.getMessage());
-            System.out.println(ex.getMessage());
+
+            br.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
-    
-    public void grabar_txt(){
-//        FileWriter fw;
-//        PrintWriter pw;
-        FileOutputStream fos;
-        ObjectOutputStream out;
-        try{
-//            
-            fos = new FileOutputStream(ruta_txt);
-            out = new ObjectOutputStream(fos);
-            if (out != null ) {
-                out.writeObject(rp);
-                out.close();
-                
+
+    public void grabar_txt() {
+        try {
+            FileWriter file = new FileWriter(ruta_txt);
+            BufferedWriter bw = new BufferedWriter(file);
+
+            for (int i = 0; i < rp.cantidadRegistro(); i++) {
+                bw.write(rp.obtenerRegistro(i).toString());
             }
-//            
-//            for(int i = 0; i < rp.cantidadRegistro(); i++){
-//                p = rp.obtenerRegistro(i);
-//                pw.println(String.valueOf(p.getId()+", "+p.getNombre()+", "+p.getPrecio()+", "+p.getDetalles()));
-//            }
-//             pw.close();
-            
-        }catch(Exception ex){
-            mensaje("Error al grabar archivo: "+ex.getMessage());
-            System.out.println(ex.getMessage());
+
+            bw.flush();
+            bw.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
-    
-    public void ingresarRegistro(){
-        try{
-            if(leerCodigo() == -666)mensaje("Ingresar codigo entero");
-            else if("".equals(leerNombre()))mensaje("Ingresar Nombre");
-            else if(leerApellido() == "")mensaje("Ingresar Apellido");
-            else if("".equals(leerUsuario()))mensaje("Ingresar Usuario");
-            else if("".equals(leerContraseña()))mensaje("Ingresar Contraseña");
-            else{
-                p = new Node((int)leerCodigo(), ""+leerNombre(), ""+leerApellido(), ""+leerUsuario(), ""+leerContraseña());
-                if(rp.buscaId(p.getId())!= -1)mensaje("Este codigo ya existe");
-                else rp.agregarRegistro(p);
-                
-                grabar_txt();
-                listarRegistro();
-                lt.limpiar_texto(Panel); 
-            }
-        }catch(Exception ex){
-            mensaje(ex.getMessage());
-        }
-    }
-    
-    public void modificarRegistro(){
-        try{
-            if(leerCodigo() == -666)mensaje("Ingresar codigo entero");
-            else if(leerNombre() == null)mensaje("Ingresar Nombre");
-            else if(leerApellido() == null)mensaje("Ingresar Apellido");
-            else if(leerUsuario() == null)mensaje("Ingresar Usuario");
-            else if(leerContraseña() == null)mensaje("Ingresar Descripcion");
-            else{
-                int codigo = rp.buscaId(leerCodigo());
-                p = new Node(leerCodigo(), leerNombre(), ""+leerApellido(), (String)leerUsuario(), ""+leerContraseña());
-                
-                if(codigo == -1)rp.agregarRegistro(p);
-                else rp.modificarRegistro(codigo, p);
-                
+
+    public void ingresarRegistro() {
+        try {
+            if (leerCodigo() == -666) {
+                mensaje("Ingresar codigo entero");
+            } else if ("".equals(leerNombre())) {
+                mensaje("Ingresar Nombre");
+            } else if (leerApellido() == "") {
+                mensaje("Ingresar Apellido");
+            } else if ("".equals(leerUsuario())) {
+                mensaje("Ingresar Usuario");
+            } else if ("".equals(leerContraseña())) {
+                mensaje("Ingresar Contraseña");
+            } else {
+                p = new UsersNode((int) leerCodigo(), "" + leerNombre(), "" + leerApellido(), "" + leerUsuario(), "" + leerContraseña());
+                if (rp.buscaId(p.getId()) != -1) {
+                    mensaje("Este codigo ya existe");
+                } else {
+                    rp.agregarRegistro(p);
+                }
+
                 grabar_txt();
                 listarRegistro();
                 lt.limpiar_texto(Panel);
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             mensaje(ex.getMessage());
         }
     }
-    
-    public void eliminarRegistro(){
-        try{
-            if(leerCodigo() == -666) mensaje("Ingrese codigo entero");
-            
-            else{
+
+    public void modificarRegistro() {
+        try {
+            if (leerCodigo() == -666) {
+                mensaje("Ingresar codigo entero");
+            } else if (leerNombre() == null) {
+                mensaje("Ingresar Nombre");
+            } else if (leerApellido() == null) {
+                mensaje("Ingresar Apellido");
+            } else if (leerUsuario() == null) {
+                mensaje("Ingresar Usuario");
+            } else if (leerContraseña() == null) {
+                mensaje("Ingresar Descripcion");
+            } else {
                 int codigo = rp.buscaId(leerCodigo());
-                if(codigo == -1) mensaje("codigo no existe");
-                
-                else{
-                    int s = JOptionPane.showConfirmDialog(null, "Esta seguro de eliminar este producto","Si/No",0);
-                    if(s == 0){
+                p = new UsersNode(leerCodigo(), leerNombre(), "" + leerApellido(), (String) leerUsuario(), "" + leerContraseña());
+
+                if (codigo == -1) {
+                    rp.agregarRegistro(p);
+                } else {
+                    rp.modificarRegistro(codigo, p);
+                }
+
+                grabar_txt();
+                listarRegistro();
+                lt.limpiar_texto(Panel);
+            }
+        } catch (Exception ex) {
+            mensaje(ex.getMessage());
+        }
+    }
+
+    public void eliminarRegistro() {
+        try {
+            if (leerCodigo() == -666) {
+                mensaje("Ingrese codigo entero");
+            } else {
+                int codigo = rp.buscaId(leerCodigo());
+                if (codigo == -1) {
+                    mensaje("codigo no existe");
+                } else {
+                    int s = JOptionPane.showConfirmDialog(null, "Esta seguro de eliminar este producto", "Si/No", 0);
+                    if (s == 0) {
                         rp.eliminarRegistro(codigo);
-                        
+
                         grabar_txt();
                         listarRegistro();
                         lt.limpiar_texto(Panel);
                     }
                 }
-                
-                
+
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             mensaje(ex.getMessage());
         }
     }
-    
-    public void listarRegistro(){
-        DefaultTableModel dt = new DefaultTableModel(){
+
+    public void listarRegistro() {
+        DefaultTableModel dt = new DefaultTableModel() {
             @Override
-            public boolean isCellEditable(int row, int column){
+            public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
-        
+
         dt.addColumn("Nombre");
         dt.addColumn("Apellido");
         dt.addColumn("Usuario");
         dt.addColumn("Contraseña");
-        
+
         tabla.setDefaultRenderer(Object.class, new imgTabla());
-        
+
         Object fila[] = new Object[dt.getColumnCount()];
-        for(int i = 0; i < rp.cantidadRegistro(); i++){
+        for (int i = 0; i < rp.cantidadRegistro(); i++) {
             p = rp.obtenerRegistro(i);
             fila[0] = p.getNombre();
             fila[1] = p.getApellido();
             fila[2] = p.getUsuario();
             fila[3] = p.getContraseña();
-                
+            dt.addRow(fila);
+        }
         tabla.setModel(dt);
         tabla.setRowHeight(60);
-        }
     }
-    
-    public int leerCodigo(){
-        try{
+
+    public int leerCodigo() {
+        try {
             int codigo = Integer.parseInt(txtCodigo.getText().trim());
             return codigo;
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return -666;
         }
     }
-    
-    public String leerNombre(){
-        try{
+
+    public String leerNombre() {
+        try {
             String nombre = txtNombre.getText().trim().replace(" ", "_");
             return nombre;
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
-    
-    public String leerContraseña(){
-        try{
+
+    public String leerContraseña() {
+        try {
             String contraseña = txtContraseña.getText().trim().replace(" ", "_");
             return contraseña;
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
-    
-    public Object leerApellido(){
-        try{
+
+    public Object leerApellido() {
+        try {
             Object descripcion = txtApellido.getText().trim();
             return descripcion;
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
-    
-    public byte[] leerFoto(File ruta){
-        try{
+
+    public byte[] leerFoto(File ruta) {
+        try {
             byte[] icono = new byte[(int) ruta.length()];
             InputStream input = new FileInputStream(ruta);
             input.read(icono);
             return icono;
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
-    
-    
-    
-    public String leerUsuario()
-    {
+
+    public String leerUsuario() {
         String number = txtUsuario.getText().trim();
         return number;
     }
 
-    public void mensaje(String texto){
+    public void mensaje(String texto) {
         JOptionPane.showMessageDialog(null, texto);
     }
-    
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -484,17 +465,16 @@ public class Users_Options extends javax.swing.JFrame {
 
         clic_tabla = tabla.rowAtPoint(evt.getPoint());
 
-        String nombre = ""+tabla.getValueAt(clic_tabla, 0);
-        String usuario= ""+tabla.getValueAt(clic_tabla, 2);
-        String apellido = ""+tabla.getValueAt(clic_tabla, 1);
-        String contraseña = ""+tabla.getValueAt(clic_tabla, 3);
+        String nombre = "" + tabla.getValueAt(clic_tabla, 0);
+        String usuario = "" + tabla.getValueAt(clic_tabla, 2);
+        String apellido = "" + tabla.getValueAt(clic_tabla, 1);
+        String contraseña = "" + tabla.getValueAt(clic_tabla, 3);
 
         txtNombre.setText(nombre);
         txtUsuario.setText(usuario);
         txtApellido.setText(apellido);
         txtContraseña.setText(contraseña);
 
-        
     }//GEN-LAST:event_tablaMouseClicked
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
@@ -520,9 +500,9 @@ public class Users_Options extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void btn_VolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VolverActionPerformed
-        
+
         this.setVisible(false);
-        
+
     }//GEN-LAST:event_btn_VolverActionPerformed
 
     /**

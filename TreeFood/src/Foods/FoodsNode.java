@@ -1,22 +1,15 @@
 package Foods;
 
-import Restaurants.*;
-import java.io.Serializable;
+public class FoodsNode {
 
-/**
- * 
- * @author Estudiante
- */
-public class Node implements Serializable
-{
     public int Id, Calificacion;
     public String Detalles, Nombre;
     public double Precio;
-    public byte[] foto;
-    
-    Node next;
+    public String foto;
 
-    public Node(int Id, String Detalles, String Nombre, double Precio, byte[] foto, int Calificacion) {
+    FoodsNode next;
+
+    public FoodsNode(int Id, String Detalles, String Nombre, double Precio, String foto, int Calificacion) {
         this.Id = Id;
         this.Detalles = Detalles;
         this.Nombre = Nombre;
@@ -25,13 +18,16 @@ public class Node implements Serializable
         this.Calificacion = Calificacion;
     }
 
-    
-    
-    public Node() {}
-    
-    public Node clone()
-    {
-         return  new Node(this.Id,this.Detalles,this.Nombre,this.Precio, this.foto, this.Calificacion);
+    @Override
+    public String toString() {
+        return Id + "," + Detalles + "," + Nombre + "," + Precio + "," + foto + "," + Calificacion + "\n";
+    }
+
+    public FoodsNode() {
+    }
+
+    public FoodsNode clone() {
+        return new FoodsNode(this.Id, this.Detalles, this.Nombre, this.Precio, this.foto, this.Calificacion);
     }
 
     public int getId() {
@@ -66,11 +62,11 @@ public class Node implements Serializable
         this.Nombre = Nombre;
     }
 
-    public byte[] getFoto() {
+    public String getFoto() {
         return foto;
     }
 
-    public void setFoto(byte[] foto) {
+    public void setFoto(String foto) {
         this.foto = foto;
     }
 
@@ -81,7 +77,5 @@ public class Node implements Serializable
     public void setCalificacion(int Calificacion) {
         this.Calificacion = Calificacion;
     }
-    
-    
-    
+
 }

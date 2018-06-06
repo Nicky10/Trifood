@@ -1,57 +1,45 @@
 package Foods;
 
-
-import Restaurants.*;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-/**
- *
- * @author Estudiante
- */
-public class List 
-{
+public class List {
 
-    Node head = null;
+    FoodsNode head = null;
 
-    public boolean isEmpty() 
-    {
+    public boolean isEmpty() {
         return head == null ? true : false;
     }
 
-    public void printList() throws IOException 
-    {
+    public void printList() throws IOException {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        Node temp = head;
+        FoodsNode temp = head;
 
         try {
             bw.write("Grades: \n");
-            while (temp != null) 
-            {
+            while (temp != null) {
                 bw.write(temp.toString());
                 temp = temp.next;
 
             }
             bw.flush();
-        } catch (IOException e) 
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    public void insertAtBegin(Node newNode) {
+    public void insertAtBegin(FoodsNode newNode) {
         newNode.next = head;
         head = newNode;
     }
 
-    public void insertAtEnd(Node newNode) {
-        if (isEmpty()) 
-        {
+    public void insertAtEnd(FoodsNode newNode) {
+        if (isEmpty()) {
             head = newNode;
         } else {
-            Node temp = head;
+            FoodsNode temp = head;
             while (temp.next != null) {
                 temp = temp.next;
             }
@@ -60,126 +48,106 @@ public class List
         }
     }
 
-    public void insertAtPosition(Node newNode, int position) 
-    {
-        Node prev = head;
-        for (int i = 0; i < position - 1; i++) 
-        {
+    public void insertAtPosition(FoodsNode newNode, int position) {
+        FoodsNode prev = head;
+        for (int i = 0; i < position - 1; i++) {
             prev = prev.next;
         }
-        
+
         newNode.next = prev.next;
-        prev.next = newNode;        
+        prev.next = newNode;
     }
 
-    public void deleteAtPosition(int position) 
-    {
-        Node prev = head;
-        for (int i = 0; i < position - 1; i++) 
-        {
-            prev = prev.next;
+    public void deleteAtPosition(int position) {
+        if (this.Length() == 1 && position == 0) {
+            head = null;
+        } else {
+            FoodsNode prev = head;
+            for (int i = 0; i < position - 1; i++) {
+                prev = prev.next;
+            }
+            FoodsNode temp = prev.next;
+            FoodsNode aft = temp.next;
+            prev.next = aft;
+            temp = null;
+            System.gc();
         }
-        Node temp = prev.next;
-        Node aft = temp.next;
-        prev.next = aft;
-        temp = null;
-        System.gc();
-
     }
 
-    public void deleteAtBegin() 
-    {
-        Node temp = head;
+    public void deleteAtBegin() {
+        FoodsNode temp = head;
         head = head.next;
         temp = null;
         System.gc();
     }
 
-    public void deleteAtEnd() 
-    {
-        Node temp = head;
+    public void deleteAtEnd() {
+        FoodsNode temp = head;
 
-        while (temp.next.next != null)
-        {
+        while (temp.next.next != null) {
             temp = temp.next;
         }
         temp.next = null;
         System.gc();
     }
-    
-    public Node searchByPosition(int position)
-    {
-        Node temp = head;
-        for (int i = 0; i < position - 1; i++) {
+
+    public FoodsNode searchByPosition(int position) {
+        FoodsNode temp = head;
+        for (int i = 0; i < position; i++) {
             temp = temp.next;
         }
         return temp;
     }
-    
-    public Node searchByFood(String name)
-    {
-        Node temp = head;
-        while(temp.Nombre != name) {
+
+    public FoodsNode searchByFood(String name) {
+        FoodsNode temp = head;
+        while (temp.Nombre != name) {
             temp = temp.next;
         }
         return temp;
     }
-    
-    public int searchById(int Id)
-    {
+
+    public int searchById(int Id) {
         int respuesta = -1;
-        for (int i = 0; i < this.Length() - 1; i++) {
-            if (this.searchByPosition(i).getId() == Id){
-                respuesta=i;
+        for (int i = 0; i < this.Length(); i++) {
+            if (this.searchByPosition(i).getId() == Id) {
+                respuesta = i;
             }
         }
         return respuesta;
     }
-    
-    public Node searchById_(int Id)
-    {
-        Node temp = null;
-        for (int i = 0; i < this.Length() - 1; i++) {
-            if (this.searchByPosition(i).getId() == Id){
+
+    public FoodsNode searchById_(int Id) {
+        FoodsNode temp = null;
+        for (int i = 0; i < this.Length(); i++) {
+            if (this.searchByPosition(i).getId() == Id) {
                 temp = this.searchByPosition(i);
             }
         }
         return temp;
     }
-    
-    
-    
-    public void updateFood(int Id, Node newNode)
-    {
-        Node temp = this.searchById_(Id);
+
+    public void updateFoods(int Id, FoodsNode newNode) {
+        FoodsNode temp = this.searchById_(Id);
         temp.Detalles = newNode.Detalles;
         temp.Id = newNode.Id;
         temp.Nombre = newNode.Nombre;
-        temp.Precio = newNode.Precio;
+        temp.Calificacion = newNode.Calificacion;
         temp.foto = newNode.foto;
     }
-    
-    public int Length()
-    {
-        Node temp = this.head;
-        int counter = 1;
-        while(temp.next != null)
-        {
-            temp = temp.next;
-            counter++;
+
+    public int Length() {
+        if (isEmpty()) {
+            return 0;
+        } else {
+            FoodsNode temp = this.head;
+            int counter = 1;
+            while (temp.next != null) {
+                temp = temp.next;
+                counter++;
+            }
+            return counter;
         }
-        return counter;
     }
 
-    public static void main(String[] args)
-    {
-        List a = new List();
-        for (int i = 0; i < 5; i++) {
-            a.insertAtEnd(new Node(i,"","",0,null,0));
-            
-        }
-        System.out.println(a.Length());
-        System.out.println(a.searchById(2));
-        
-    }
 }

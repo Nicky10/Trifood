@@ -3,30 +3,30 @@ package Users;
 import Restaurants.*;
 
 /**
- * 
+ *
  * @author Estudiante
  */
-public class Node
-{
+public class UsersNode {
+
     public int Id;
     public String Nombre, Apellido, Usuario, Contraseña;
-    
-    Node next;
 
-    public Node(int Id, String Nombre, String Apellido, String Usuario, String Contraseña) {
+    UsersNode next;
+
+    public UsersNode(int Id, String Nombre, String Apellido, String Usuario, String Contraseña) {
         this.Id = Id;
         this.Nombre = Nombre;
         this.Apellido = Apellido;
         this.Usuario = Usuario;
         this.Contraseña = Contraseña;
     }
-    
-    public Node() {}
-    
-    public Node clone()
-    {
-         return  new Node(this.Id, this.Nombre,this.Apellido,this.Usuario,this.Contraseña);
-        
+
+    public UsersNode() {
+    }
+
+    public UsersNode clone() {
+        return new UsersNode(this.Id, this.Nombre, this.Apellido, this.Usuario, this.Contraseña);
+
     }
 
     public int getId() {
@@ -68,6 +68,10 @@ public class Node
     public void setContraseña(String Contraseña) {
         this.Contraseña = Contraseña;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return Id + "," + Nombre + "," + Apellido + "," + Usuario + "," + Contraseña + "\n";
+    }
+
 }

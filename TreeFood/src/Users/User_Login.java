@@ -16,10 +16,9 @@ import javax.swing.JOptionPane;
  */
 public class User_Login extends javax.swing.JFrame {
 
-    
-    static Node p;
-    static Proceso rp = new Proceso();
-    
+    static UsersNode p;
+    static UsersProcess rp = new UsersProcess();
+
     /**
      * Creates new form Admin_Login
      */
@@ -28,39 +27,36 @@ public class User_Login extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
     }
 
-    public String leerUsuario()
-    {
-        try{
+    public String leerUsuario() {
+        try {
             String usuario = tf_Usuario.getText().trim().replace(" ", "_");
             return usuario;
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
-    
-    public String leerContraseña(){
-        try{
+
+    public String leerContraseña() {
+        try {
             String contraseña = jp_Contraseña.getText().trim().replace(" ", "_");
             return contraseña;
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
-    
-    public void Ingreso()
-    {
+
+    public void Ingreso() {
         for (int i = 0; i < rp.cantidadRegistro(); i++) {
-            if(rp.obtenerRegistro(i).Usuario == leerUsuario() && rp.obtenerRegistro(i).Contraseña == leerContraseña())
-            {
+            if (rp.obtenerRegistro(i).Usuario == leerUsuario() && rp.obtenerRegistro(i).Contraseña == leerContraseña()) {
                 new Users_Options().setVisible(true);
             }
         }
     }
-    
-    public void mensaje(String texto){
+
+    public void mensaje(String texto) {
         JOptionPane.showMessageDialog(null, texto);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -131,12 +127,12 @@ public class User_Login extends javax.swing.JFrame {
     }//GEN-LAST:event_tf_UsuarioActionPerformed
 
     private void btn_ContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ContinuarActionPerformed
-        
+
         this.Ingreso();
     }//GEN-LAST:event_btn_ContinuarActionPerformed
 
     private void btn_VolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VolverActionPerformed
-        
+
         this.setVisible(false);
     }//GEN-LAST:event_btn_VolverActionPerformed
 
@@ -169,8 +165,8 @@ public class User_Login extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
-        
-        p = new Node(1, "Santiago", "Mahecha", "smahechap", "smahechap");
+
+        p = new UsersNode(1, "Santiago", "Mahecha", "smahechap", "smahechap");
         rp.agregarRegistro(p);
 
         /* Create and display the form */

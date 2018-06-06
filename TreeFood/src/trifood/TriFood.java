@@ -12,21 +12,16 @@ import java.io.File;
  *
  * @author ADMIN
  */
-
-
-
 public class TriFood {
 
-    
-    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+
         First_View fv = new First_View();
         fv.setVisible(true);
-        
+
     }
-    
+
 }

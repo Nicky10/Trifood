@@ -29,8 +29,6 @@ public class First_View extends javax.swing.JFrame {
     private void initComponents() {
 
         TriFood_image = new javax.swing.JLabel();
-        btn_Usuario = new javax.swing.JButton();
-        btn_Registro = new javax.swing.JButton();
         btn_Admin = new javax.swing.JButton();
         lbl_Fondo = new javax.swing.JLabel();
 
@@ -42,19 +40,6 @@ public class First_View extends javax.swing.JFrame {
         TriFood_image.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Trifood logo.jpg"))); // NOI18N
         getContentPane().add(TriFood_image, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 60, 190, 170));
 
-        btn_Usuario.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        btn_Usuario.setText("Usuario");
-        btn_Usuario.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_UsuarioActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btn_Usuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 300, 100, -1));
-
-        btn_Registro.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        btn_Registro.setText("Registrarse");
-        getContentPane().add(btn_Registro, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 350, 120, -1));
-
         btn_Admin.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btn_Admin.setText("Admin");
         btn_Admin.addActionListener(new java.awt.event.ActionListener() {
@@ -62,7 +47,7 @@ public class First_View extends javax.swing.JFrame {
                 btn_AdminActionPerformed(evt);
             }
         });
-        getContentPane().add(btn_Admin, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 250, 100, -1));
+        getContentPane().add(btn_Admin, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 280, 100, -1));
 
         lbl_Fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Fondo.jpg"))); // NOI18N
         getContentPane().add(lbl_Fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 387, 488));
@@ -70,16 +55,10 @@ public class First_View extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn_UsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_UsuarioActionPerformed
-        
-        new Users.User_Login().setVisible(true);
-        
-    }//GEN-LAST:event_btn_UsuarioActionPerformed
-
     private void btn_AdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AdminActionPerformed
-        
+
         new Admin.Admin_Login().setVisible(true);
-        
+
     }//GEN-LAST:event_btn_AdminActionPerformed
 
     /**
@@ -120,8 +99,6 @@ public class First_View extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel TriFood_image;
     private javax.swing.JButton btn_Admin;
-    private javax.swing.JButton btn_Registro;
-    private javax.swing.JButton btn_Usuario;
     private javax.swing.JLabel lbl_Fondo;
     // End of variables declaration//GEN-END:variables
 }

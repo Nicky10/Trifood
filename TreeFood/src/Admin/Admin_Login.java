@@ -14,10 +14,9 @@ import javax.swing.JOptionPane;
  */
 public class Admin_Login extends javax.swing.JFrame {
 
-    
     Node p;
     Proceso rp = new Proceso();
-    
+
     /**
      * Creates new form Admin_Login
      */
@@ -26,40 +25,37 @@ public class Admin_Login extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
     }
 
-    public String leerUsuario()
-    {
-        try{
+    public String leerUsuario() {
+        try {
             String usuario = tf_Usuario.getText().trim().replace(" ", "_");
             return usuario;
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
-    
-    public String leerContraseña(){
-        try{
+
+    public String leerContraseña() {
+        try {
             String contraseña = jp_Contraseña.getText().trim().replace(" ", "_");
             return contraseña;
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
-    
-    public void Ingreso(Proceso rp)
-    {
+
+    public void Ingreso(Proceso rp) {
         for (int i = 0; i < rp.cantidadRegistro(); i++) {
-            if(rp.obtenerRegistro(i).Usuario.equals(leerUsuario()) && rp.obtenerRegistro(i).Contraseña.equals(leerContraseña()))
-            {
+            if (rp.obtenerRegistro(i).Usuario.equals(leerUsuario()) && rp.obtenerRegistro(i).Contraseña.equals(leerContraseña())) {
                 new Admin_Options().setVisible(true);
                 break;
             }
         }
     }
-    
-    public void mensaje(String texto){
+
+    public void mensaje(String texto) {
         JOptionPane.showMessageDialog(null, texto);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -130,15 +126,15 @@ public class Admin_Login extends javax.swing.JFrame {
     }//GEN-LAST:event_tf_UsuarioActionPerformed
 
     private void btn_ContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ContinuarActionPerformed
-        
+
         String usu = "Nicolas", cont = "Nicolas";
-        if(tf_Usuario.getText().equals(usu) && jp_Contraseña.getText().equals(cont)){
+        if (tf_Usuario.getText().equals(usu) && jp_Contraseña.getText().equals(cont)) {
             Admin_Options ao = new Admin_Options();
             ao.setVisible(true);
-        }
-        else
+        } else {
             mensaje("Usuario y/o contraseña inválidos");
-        
+        }
+
     }//GEN-LAST:event_btn_ContinuarActionPerformed
 
     private void btn_VolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VolverActionPerformed
@@ -172,8 +168,6 @@ public class Admin_Login extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-        
-        
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

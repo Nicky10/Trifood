@@ -87,26 +87,26 @@ public class Admin_Options extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_RestaurantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_RestaurantActionPerformed
-        
+
         new Restaurants_Options().setVisible(true);
-        
+
     }//GEN-LAST:event_btn_RestaurantActionPerformed
 
     private void btn_ComidasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ComidasActionPerformed
-        
+
         new Food_Options().setVisible(true);
-        
+
     }//GEN-LAST:event_btn_ComidasActionPerformed
 
     private void btn_UsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_UsuariosActionPerformed
-        
-         new Users_Options().setVisible(true);     
+
+        new Users_Options().setVisible(true);
     }//GEN-LAST:event_btn_UsuariosActionPerformed
 
     private void btn_VolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VolverActionPerformed
-        
+
         this.setVisible(false);
-        
+
     }//GEN-LAST:event_btn_VolverActionPerformed
 
     /**

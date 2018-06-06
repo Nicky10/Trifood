@@ -1,27 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Admin;
 
-import Foods.Node;
-import Foods.Proceso;
+import Foods.FoodsNode;
+import Foods.FoodsProcess;
 import Otros.Limpiar_txt;
 import Otros.imgTabla;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.util.StringTokenizer;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -30,34 +21,25 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
-
-
-/**
- *
- * @author ADMIN
- */
 public class Food_Options extends javax.swing.JFrame {
-    
+
     Limpiar_txt lt = new Limpiar_txt();
-    
-    private String ruta_txt = "mi.txt"; 
-    
-    Node p;
-    Proceso rp;
-    
+
+    private final String ruta_txt = "Foods.txt";
+
+    FoodsNode p;
+    FoodsProcess fp = new FoodsProcess();
+
     int clic_tabla;
-    /**
-     * Creates new form Food_Options
-     */
+
     public Food_Options() {
+        cargar_txt();
         initComponents();
+        listarRegistro();
         this.setLocationRelativeTo(null);
     }
-    /**
-     * @param args the command line arguments
-     */
+
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -80,232 +62,243 @@ public class Food_Options extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Food_Options().setVisible(true);
             }
         });
     }
-    
-    public void cargar_txt(){
+
+    public void cargar_txt() {
         File ruta = new File(ruta_txt);
-        try{
-            FileInputStream fis = new FileInputStream(ruta_txt);
-            ObjectInputStream in = new ObjectInputStream(fis);
-            if (in != null) {
-                rp = (Proceso)in.readObject();
-                in.close();
-                
+        try {
+            FileReader fr = new FileReader(ruta);
+            BufferedReader br = new BufferedReader(fr);
+
+            String input = br.readLine();
+
+            while (input != null) {
+                String[] p2 = input.split(",");
+                System.out.println(p2.length);
+                fp.agregarRegistro(new FoodsNode(Integer.parseInt(p2[0]), (p2[1]), p2[2], Double.parseDouble(p2[3]), p2[4], Integer.parseInt(p2[5])));
+                input = br.readLine();
             }
-        }catch(Exception ex){
-            mensaje("Error al cargar archivo: "+ex.getMessage());
-            System.out.println(ex.getMessage());
+
+            br.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
-    
-    public void grabar_txt(){
-//        FileWriter fw;
-//        PrintWriter pw;
-        FileOutputStream fos;
-        ObjectOutputStream out;
-        try{
-//            
-            fos = new FileOutputStream(ruta_txt);
-            out = new ObjectOutputStream(fos);
-            if (out != null ) {
-                out.writeObject(rp);
-                out.close();
-                
+
+    public void grabar_txt() {
+        try {
+            FileWriter file = new FileWriter(ruta_txt);
+            BufferedWriter bw = new BufferedWriter(file);
+
+            for (int i = 0; i < fp.cantidadRegistro(); i++) {
+                bw.write(fp.obtenerRegistro(i).toString());
             }
-//            
-//            for(int i = 0; i < rp.cantidadRegistro(); i++){
-//                p = rp.obtenerRegistro(i);
-//                pw.println(String.valueOf(p.getId()+", "+p.getNombre()+", "+p.getPrecio()+", "+p.getDetalles()));
-//            }
-//             pw.close();
-            
-        }catch(Exception ex){
-            mensaje("Error al grabar archivo: "+ex.getMessage());
-            System.out.println(ex.getMessage());
+
+            bw.flush();
+            bw.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
-    
-    public void ingresarRegistro(File ruta){
-        try{
-            if(leerCodigo() == -666)mensaje("Ingresar codigo entero");
-            else if("".equals(leerNombre()))mensaje("Ingresar Nombre");
-            else if(leerPrecio() == -666) mensaje("Ingresar Precio");
-            else if("".equals(leerDescripcion()))mensaje("Ingresar Descripcion");
-            else{
-                p = new Node((int)leerCodigo(), (String)leerDescripcion(), leerNombre(), leerPrecio(), leerFoto(ruta), leerCalificacion());
-                if(rp.buscaId(p.getId())!= -1)mensaje("Este codigo ya existe");
-                else rp.agregarRegistro(p);
-                
-                grabar_txt();
-                listarRegistro();
-                lt.limpiar_texto(Panel); 
-            }
-        }catch(Exception ex){
-            mensaje(ex.getMessage());
-        }
-    }
-    
-    public void modificarRegistro(File ruta){
-        try{
-            if(leerCodigo() == -666)mensaje("Ingresar codigo entero");
-            else if(leerNombre() == null)mensaje("Ingresar Nombre");
-            else if(leerPrecio() == -666) mensaje("Ingresar Precio");
-            else if(leerDescripcion() == null)mensaje("Ingresar Descripcion");
-            else{
-                int codigo = rp.buscaId(leerCodigo());
-                if (txtRuta.getText().equalsIgnoreCase("")) 
-                    p = new Node(leerCodigo(), (String) leerDescripcion(), leerNombre(), leerPrecio(), leerFoto2(codigo), leerCalificacion());
-                else
-                    p = new Node(leerCodigo(), (String) leerDescripcion(), leerNombre(), leerPrecio(), leerFoto(ruta), leerCalificacion());
-                
-                if(codigo == -1)rp.agregarRegistro(p);
-                else rp.modificarRegistro(codigo, p);
-                
+
+    public void ingresarRegistro(String ruta) {
+        try {
+            if (leerCodigo() == -666) {
+                mensaje("Ingresar codigo entero");
+            } else if ("".equals(leerNombre())) {
+                mensaje("Ingresar Nombre");
+            } else if (leerPrecio() == -666) {
+                mensaje("Ingresar Precio");
+            } else if ("".equals(leerDescripcion())) {
+                mensaje("Ingresar Descripcion");
+            } else if ("".equals(txtRuta)) {
+                mensaje("Ingresar Imagen.");
+            } else {
+                p = new FoodsNode((int) leerCodigo(), (String) leerDescripcion(), leerNombre(), leerPrecio(), ruta, leerCalificacion());
+                if (fp.buscaId(p.getId()) != -1) {
+                    mensaje("Este codigo ya existe");
+                } else {
+                    fp.agregarRegistro(p);
+                }
+
                 grabar_txt();
                 listarRegistro();
                 lt.limpiar_texto(Panel);
             }
-        }catch(Exception ex){
-            mensaje(ex.getMessage());
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
-    
-    public void eliminarRegistro(){
-        try{
-            if(leerCodigo() == -666) mensaje("Ingrese codigo entero");
-            
-            else{
-                int codigo = rp.buscaId(leerCodigo());
-                if(codigo == -1) mensaje("codigo no existe");
-                
-                else{
-                    int s = JOptionPane.showConfirmDialog(null, "Esta seguro de eliminar este producto","Si/No",0);
-                    if(s == 0){
-                        rp.eliminarRegistro(codigo);
-                        
+
+    public void modificarRegistro(String ruta) {
+        try {
+            if (leerCodigo() == -666) {
+                mensaje("Ingresar codigo entero");
+            } else if (leerNombre() == null) {
+                mensaje("Ingresar Nombre");
+            } else if (leerPrecio() == -666) {
+                mensaje("Ingresar Precio");
+            } else if (leerDescripcion() == null) {
+                mensaje("Ingresar Descripcion");
+            } else if ("".equals(txtRuta)) {
+                mensaje("Ingresar Imagen");
+            } else {
+                int codigo = fp.buscaId(leerCodigo());
+                if (txtRuta.getText().equalsIgnoreCase("")) {
+                    p = new FoodsNode(leerCodigo(), (String) leerDescripcion(), leerNombre(), leerPrecio(), leerFoto2(codigo), leerCalificacion());
+                } else {
+                    p = new FoodsNode(leerCodigo(), (String) leerDescripcion(), leerNombre(), leerPrecio(), ruta, leerCalificacion());
+                }
+
+                if (codigo == -1) {
+                    fp.agregarRegistro(p);
+                } else {
+                    fp.modificarRegistro(leerCodigo(), p);
+                }
+
+                grabar_txt();
+                listarRegistro();
+                lt.limpiar_texto(Panel);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void eliminarRegistro() {
+        try {
+            if (leerCodigo() == -666) {
+                mensaje("Ingrese codigo entero");
+            } else {
+                int codigo = fp.buscaId(leerCodigo());
+                if (codigo == -1) {
+                    mensaje("codigo no existe");
+                } else {
+                    int s = JOptionPane.showConfirmDialog(null, "Esta seguro de eliminar este producto", "Si/No", 0);
+                    if (s == 0) {
+                        fp.eliminarRegistro(codigo);
                         grabar_txt();
                         listarRegistro();
                         lt.limpiar_texto(Panel);
                     }
                 }
-                
-                
+
             }
-        }catch(Exception ex){
-            mensaje(ex.getMessage());
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
-    
-    public void listarRegistro(){
-        DefaultTableModel dt = new DefaultTableModel(){
+
+    public void listarRegistro() {
+        DefaultTableModel dt = new DefaultTableModel() {
             @Override
-            public boolean isCellEditable(int row, int column){
+            public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
-        
+
         dt.addColumn("Nombre");
         dt.addColumn("Precio");
         dt.addColumn("Calificación");
         dt.addColumn("Descripcion");
         dt.addColumn("Foto");
-        
+
         tabla.setDefaultRenderer(Object.class, new imgTabla());
-        
+
         Object fila[] = new Object[dt.getColumnCount()];
-        for(int i = 0; i < rp.cantidadRegistro(); i++){
-            p = rp.obtenerRegistro(i);
+        for (int i = 0; i < fp.cantidadRegistro(); i++) {
+            p = fp.obtenerRegistro(i);
             fila[0] = p.getNombre();
             fila[1] = p.getPrecio();
             fila[2] = p.getCalificacion();
             fila[3] = p.getDetalles();
-            try{
-                byte[] bi = p.getFoto();
+            try {
+                byte[] bi = leerFoto(new File(p.getFoto()));
                 BufferedImage image = null;
                 InputStream in = new ByteArrayInputStream(bi);
                 image = ImageIO.read(in);
                 ImageIcon img = new ImageIcon(image.getScaledInstance(126, 126, 0));
                 fila[4] = new JLabel(img);
-                
-            }catch(Exception e){fila[4] = "No imagen";}
+
+            } catch (Exception e) {
+                fila[4] = "No imagen";
+            }
             dt.addRow(fila);
         }
         tabla.setModel(dt);
         tabla.setRowHeight(60);
     }
-    
-    public int leerCodigo(){
-        try{
+
+    public int leerCodigo() {
+        try {
             int codigo = Integer.parseInt(txtCodigo.getText().trim());
             return codigo;
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return -666;
         }
     }
-    
-    public String leerNombre(){
-        try{
+
+    public String leerNombre() {
+        try {
             String nombre = txtNombre.getText().trim().replace(" ", "_");
             return nombre;
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
-    
-    public double leerPrecio(){
-        try{
+
+    public double leerPrecio() {
+        try {
             double precio = Double.parseDouble(txtPrecio.getText().trim());
             return precio;
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return -666;
         }
     }
-    
-    public Object leerDescripcion(){
-        try{
+
+    public Object leerDescripcion() {
+        try {
             Object descripcion = txtDescripcion.getText().trim();
             return descripcion;
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
-    
-    public byte[] leerFoto(File ruta){
-        try{
+
+    public byte[] leerFoto(File ruta) {
+        try {
             byte[] icono = new byte[(int) ruta.length()];
             InputStream input = new FileInputStream(ruta);
             input.read(icono);
             return icono;
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
-    
-    
-    public byte[] leerFoto2(int codigo){
-            p = rp.obtenerRegistro(codigo);
-            try{
-               return p.getFoto();
-            }catch(Exception ex){
-               return null;
-            }
+
+    public String leerFoto2(int codigo) {
+        p = fp.obtenerRegistro(codigo);
+        try {
+            return p.getFoto();
+        } catch (Exception ex) {
+            return null;
         }
-    
-    public int leerCalificacion()
-    {
-        int number = Integer.parseInt((String)cb_Calificacion.getSelectedItem());
+    }
+
+    public int leerCalificacion() {
+        int number = Integer.parseInt((String) cb_Calificacion.getSelectedItem());
         return number;
     }
 
-    public void mensaje(String texto){
+    public void mensaje(String texto) {
         JOptionPane.showMessageDialog(null, texto);
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -490,7 +483,7 @@ public class Food_Options extends javax.swing.JFrame {
                         .addComponent(btn_BuscarFoto))
                     .addComponent(txtRuta, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblFoto, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+                .addComponent(lblFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
             .addGroup(PanelLayout.createSequentialGroup()
                 .addGap(167, 167, 167)
@@ -536,7 +529,7 @@ public class Food_Options extends javax.swing.JFrame {
                         .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)))
-                    .addComponent(lblFoto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblFoto))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -572,34 +565,32 @@ public class Food_Options extends javax.swing.JFrame {
     private void tablaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaMouseClicked
 
         clic_tabla = tabla.rowAtPoint(evt.getPoint());
-        
-        String nombre = ""+tabla.getValueAt(clic_tabla, 0);
-        int calificacion = (int)tabla.getValueAt(clic_tabla, 2);
-        double precio = (double)tabla.getValueAt(clic_tabla, 1);
-        Object descripcion = ""+tabla.getValueAt(clic_tabla, 3);
-        
+
+        String nombre = "" + tabla.getValueAt(clic_tabla, 0);
+        int calificacion = (int) tabla.getValueAt(clic_tabla, 2);
+        double precio = (double) tabla.getValueAt(clic_tabla, 1);
+        Object descripcion = "" + tabla.getValueAt(clic_tabla, 3);
+
         cb_Calificacion.setSelectedItem(calificacion);
         txtNombre.setText(nombre);
         txtPrecio.setText(String.valueOf(precio));
         txtDescripcion.setText(String.valueOf(descripcion));
-        
-        try{
-            JLabel lbl = (JLabel)tabla.getValueAt(clic_tabla, 4);
+
+        try {
+            JLabel lbl = (JLabel) tabla.getValueAt(clic_tabla, 4);
             lblFoto.setIcon(lbl.getIcon());
-        }catch(Exception ex){
+        } catch (Exception ex) {
         }
 
     }//GEN-LAST:event_tablaMouseClicked
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
-        File ruta = new File(txtRuta.getText());
-        this.ingresarRegistro(ruta);
+        this.ingresarRegistro(txtRuta.getText());
 
     }//GEN-LAST:event_btn_GuardarActionPerformed
 
     private void btn_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarActionPerformed
-        File ruta = new File(txtRuta.getText());
-        this.modificarRegistro(ruta);
+        this.modificarRegistro(txtRuta.getText());
 
     }//GEN-LAST:event_btn_ModificarActionPerformed
 
@@ -610,11 +601,11 @@ public class Food_Options extends javax.swing.JFrame {
 
     private void btn_BuscarFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarFotoActionPerformed
         JFileChooser jf = new JFileChooser();
-        FileNameExtensionFilter fil = new FileNameExtensionFilter("JPG, PNG & GIF","jpg","png","gif");
+        FileNameExtensionFilter fil = new FileNameExtensionFilter("JPG, PNG & GIF", "jpg", "png", "gif");
         jf.setFileFilter(fil);
         jf.setCurrentDirectory(new File("Fotos"));
         int el = jf.showOpenDialog(this);
-        if(el == JFileChooser.APPROVE_OPTION){
+        if (el == JFileChooser.APPROVE_OPTION) {
             txtRuta.setText(jf.getSelectedFile().getAbsolutePath());
             lblFoto.setIcon(new ImageIcon(txtRuta.getText()));
         }
@@ -630,11 +621,10 @@ public class Food_Options extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPrecioActionPerformed
 
     private void btn_volverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_volverActionPerformed
-        
-        this.setVisible(false);
-        
-    }//GEN-LAST:event_btn_volverActionPerformed
 
+        this.setVisible(false);
+
+    }//GEN-LAST:event_btn_volverActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Panel;

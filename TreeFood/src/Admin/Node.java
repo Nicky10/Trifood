@@ -4,14 +4,14 @@ import Admin.*;
 import Restaurants.*;
 
 /**
- * 
+ *
  * @author Estudiante
  */
-public class Node
-{
+public class Node {
+
     public int Id;
     public String Usuario, Contraseña;
-    
+
     Node next;
 
     public Node(int Id, String Usuario, String Contraseña) {
@@ -19,13 +19,13 @@ public class Node
         this.Usuario = Usuario;
         this.Contraseña = Contraseña;
     }
-    
-    public Node() {}
-    
-    public Node clone()
-    {
-         return  new Node(this.Id,this.Usuario,this.Contraseña);
-        
+
+    public Node() {
+    }
+
+    public Node clone() {
+        return new Node(this.Id, this.Usuario, this.Contraseña);
+
     }
 
     public int getId() {
@@ -51,7 +51,5 @@ public class Node
     public void setContraseña(String Contraseña) {
         this.Contraseña = Contraseña;
     }
-    
-    
-    
+
 }
